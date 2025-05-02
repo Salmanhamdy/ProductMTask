@@ -1,0 +1,89 @@
+﻿@model ProductDto
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-warning">Edit Product</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form id="editForm">
+                <div class="mb-3">
+                    <label asp-for="Code" class="form-label">Code</label>
+                    <input asp-for="Code" class="form-control" readonly />
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Unit" class="form-label"></label>
+                    <input asp-for="Unit" class="form-control" />
+                    <span asp-validation-for="Unit" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="InitialQuantity" class="form-label">Quantity</label>
+                    <input asp-for="InitialQuantity" class="form-control" />
+                    <span asp-validation-for="InitialQuantity" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100">Update</button>
+            </form>
+
+            <div id="result" class="mt-3"></div>
+
+            <div class="mt-3">
+                <a class="btn btn-secondary" href="@Url.Action("Index", "Product")">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#editForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const productData = {
+                Code: $('#Code').val(),
+                Name: $('#Name').val(),
+                Unit: $('#Unit').val(),
+                Price: $('#Price').val(),
+                InitialQuantity: $('#InitialQuantity').val()
+            };
+
+            $.ajax({
+                url: '/Product/Edit',
+                method: 'POST',
+                data: productData,
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        $('#result').html('<p class="text-danger">' + response.message + '</p>');
+                    }
+                },
+                error: function () {
+                    $('#result').html('<p class="text-danger">Error sending request.</p>');
+                }
+            });
+        });
+    </script>
+}

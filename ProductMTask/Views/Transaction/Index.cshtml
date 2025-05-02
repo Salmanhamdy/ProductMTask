@@ -1,0 +1,84 @@
+﻿@model List<TransactionViewModel>
+@{
+    ViewData["Title"] = "Transactions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Transaction List</h2>
+ 
+    </div>
+    <!-- فلاتر التاريخ -->
+    <div class="mb-3">
+        <label for="fromDate" class="form-label">From Date:</label>
+        <input type="date" id="fromDate" class="form-control" />
+
+        <label for="toDate" class="form-label mt-2">To Date:</label>
+        <input type="date" id="toDate" class="form-control" />
+
+        <button id="filterBtn" class="btn btn-primary mt-3">Filter</button>
+    </div>
+
+    <table class="table table-striped table-hover text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Total Price</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="transactionTableBody">
+            <!-- البيانات ستظهر هنا باستخدام AJAX -->
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // تحميل المعاملات
+        function loadTransactions(from, to) {
+            $.ajax({
+                url: '/Transaction/LoadTransactions', // الأكشن في الـ Controller
+                method: 'GET',
+                data: {
+                    from: from,
+                    to: to
+                },
+                success: function (data) {
+                    // ملء الجدول بالبيانات المسترجعة
+                    $('#transactionTableBody').empty();
+                    data.forEach(function (item) {
+                        $('#transactionTableBody').append(`
+                            <tr>
+                                <td>${item.productName}</td>
+                                <td>${item.quantity}</td>
+                                <td>${item.unit}</td>
+                                <td>${item.totalPrice}</td>
+                                <td>${item.date}</td>
+                            </tr>
+                        `);
+                    });
+                },
+                error: function () {
+                    alert('Error loading transactions');
+                }
+            });
+        }
+
+        // تحميل المعاملات عند تحميل الصفحة
+        $(document).ready(function () {
+            loadTransactions(); // عرض المعاملات بدون فلاتر في البداية
+
+            // عند الضغط على زر الفلترة
+            $('#filterBtn').click(function () {
+                const from = $('#fromDate').val();
+                const to = $('#toDate').val();
+
+                loadTransactions(from, to); // إعادة تحميل المعاملات باستخدام الفلاتر
+            });
+        });
+    </script>
+}
