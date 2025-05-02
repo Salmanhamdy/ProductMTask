@@ -58,7 +58,7 @@
                 success: function (response) {
                     if (response.success) {
                         alert('Transaction created successfully!');
-                        window.location.href = '/Transaction/Index'; // العودة إلى قائمة المعاملات
+                        window.location.href = '/Transaction/Index'; 
                     } else {
                         alert('Error: ' + response.message);
                     }
@@ -68,8 +68,6 @@
                 }
             });
         });
-
-        // حساب الإجمالي عند تغيير الكمية
         $('#quantity').on('input', function () {
             calculateTotalPrice();
         });

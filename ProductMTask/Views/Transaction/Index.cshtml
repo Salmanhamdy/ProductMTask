@@ -8,7 +8,6 @@
         <h2 class="text-primary">Transaction List</h2>
  
     </div>
-    <!-- فلاتر التاريخ -->
     <div class="mb-3">
         <label for="fromDate" class="form-label">From Date:</label>
         <input type="date" id="fromDate" class="form-control" />
@@ -30,7 +29,6 @@
             </tr>
         </thead>
         <tbody id="transactionTableBody">
-            <!-- البيانات ستظهر هنا باستخدام AJAX -->
         </tbody>
     </table>
 </div>
@@ -38,17 +36,17 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // تحميل المعاملات
+      
         function loadTransactions(from, to) {
             $.ajax({
-                url: '/Transaction/LoadTransactions', // الأكشن في الـ Controller
+                url: '/Transaction/LoadTransactions',
                 method: 'GET',
                 data: {
                     from: from,
                     to: to
                 },
                 success: function (data) {
-                    // ملء الجدول بالبيانات المسترجعة
+                
                     $('#transactionTableBody').empty();
                     data.forEach(function (item) {
                         $('#transactionTableBody').append(`
@@ -68,16 +66,15 @@
             });
         }
 
-        // تحميل المعاملات عند تحميل الصفحة
         $(document).ready(function () {
-            loadTransactions(); // عرض المعاملات بدون فلاتر في البداية
+            loadTransactions(); 
 
-            // عند الضغط على زر الفلترة
+            
             $('#filterBtn').click(function () {
                 const from = $('#fromDate').val();
                 const to = $('#toDate').val();
 
-                loadTransactions(from, to); // إعادة تحميل المعاملات باستخدام الفلاتر
+                loadTransactions(from, to); 
             });
         });
     </script>
